@@ -1,0 +1,22 @@
+meta {
+  name: Get Me
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{base_url}}/v1/users/me
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{access_token}}
+}
+
+tests {
+  test("profile is returned", function () {
+    expect(res.status).to.equal(200);
+    expect(res.body.data.email).to.equal(bru.getEnvVar("email"));
+  });
+}

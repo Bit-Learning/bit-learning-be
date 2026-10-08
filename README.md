@@ -22,6 +22,24 @@ trong shell trước.
 Mặc định ứng dụng tự chạy goose migrations (`AUTO_MIGRATE=true`). Nếu muốn chạy
 thủ công, cài `goose`, đặt `AUTO_MIGRATE=false`, rồi dùng `make migrate-up`.
 
+### Developer workflow
+
+Cài [Air](https://github.com/air-verse/air), sau đó chạy API với hot reload:
+
+```bash
+make dev
+```
+
+Lệnh này tự chuẩn bị Bruno local environment, khởi động PostgreSQL, đọc `.env`,
+rồi rebuild/restart API mỗi khi file Go hoặc OpenAPI thay đổi. API reference
+tương tác bằng Scalar có tại <http://localhost:8080/docs>; OpenAPI source có tại
+<http://localhost:8080/openapi.yaml>.
+
+Để gọi API bằng Bruno, mở thư mục `bruno` trong app và chọn environment `local`.
+Request Register hoặc Login sẽ tự lưu `access_token` để các request Get Me và
+Update Me sử dụng. File environment thật được ignore để token local không bị
+commit; `local.example.bru` là template dùng chung.
+
 ## API
 
 ```bash

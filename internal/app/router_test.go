@@ -190,3 +190,28 @@ func TestProfileNotFound(t *testing.T) {
 		t.Fatalf("status = %d, body = %s", response.Code, response.Body)
 	}
 }
+
+func TestAPIDocumentationRoutes(t *testing.T) {
+	handler := testRouter(newMemoryUsers())
+
+	spec := perform(handler, http.MethodGet, "/openapi.yaml", "", "")
+	if spec.Code != http.StatusOK {
+		t.Fatalf("OpenAPI status = %d", spec.Code)
+	}
+	if contentType := spec.Header().Get("Content-Type"); contentType != "application/yaml; charset=utf-8" {
+		t.Fatalf("OpenAPI content type = %q", contentType)
+	}
+	if !strings.Contains(spec.Body.String(), "openapi: 3.1.0") || !strings.Contains(spec.Body.String(), "/v1/auth/login:") {
+		t.Fatalf("unexpected OpenAPI document: %s", spec.Body)
+	}
+
+	for _, path := range []string{"/docs", "/docs/"} {
+		docs := perform(handler, http.MethodGet, path, "", "")
+		if docs.Code != http.StatusOK {
+			t.Fatalf("%s status = %d", path, docs.Code)
+		}
+		if !strings.Contains(docs.Body.String(), "Scalar.createApiReference") || !strings.Contains(docs.Body.String(), "url: '/openapi.yaml'") {
+			t.Fatalf("unexpected Scalar document: %s", docs.Body)
+		}
+	}
+}

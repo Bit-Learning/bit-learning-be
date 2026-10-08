@@ -8,6 +8,7 @@ import (
 	chimiddleware "github.com/go-chi/chi/v5/middleware"
 	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
 
+	apidocs "github.com/lcaohoanq/bit-learning-be-v2/api"
 	"github.com/lcaohoanq/bit-learning-be-v2/internal/modules/auth"
 	"github.com/lcaohoanq/bit-learning-be-v2/internal/modules/user"
 	"github.com/lcaohoanq/bit-learning-be-v2/internal/platform/httpx"
@@ -18,6 +19,9 @@ func NewRouter(authHandler *auth.Handler, userHandler *user.Handler, tokens plat
 	router := chi.NewRouter()
 	router.Use(chimiddleware.RequestID, chimiddleware.RealIP, chimiddleware.Recoverer)
 	router.Use(platformmw.RequestLogger(logger))
+	router.Get("/openapi.yaml", serveOpenAPI)
+	router.Get("/docs", serveScalar)
+	router.Get("/docs/", serveScalar)
 	router.Get("/healthz", func(w http.ResponseWriter, _ *http.Request) {
 		httpx.WriteData(w, http.StatusOK, map[string]string{"status": "ok"})
 	})
@@ -31,4 +35,15 @@ func NewRouter(authHandler *auth.Handler, userHandler *user.Handler, tokens plat
 		})
 	})
 	return otelhttp.NewHandler(router, "http.server")
+}
+
+func serveOpenAPI(w http.ResponseWriter, _ *http.Request) {
+	w.Header().Set("Content-Type", "application/yaml; charset=utf-8")
+	w.Header().Set("Cache-Control", "no-cache")
+	_, _ = w.Write(apidocs.OpenAPISpec)
+}
+
+func serveScalar(w http.ResponseWriter, _ *http.Request) {
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	_, _ = w.Write([]byte(apidocs.ScalarHTML))
 }

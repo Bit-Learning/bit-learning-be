@@ -18,6 +18,8 @@ import (
 	"github.com/lcaohoanq/bit-learning-be-v2/internal/telemetry"
 )
 
+const ScalarUi = "http://localhost:8080/docs"
+
 func main() {
 	logger := slog.New(slog.NewJSONHandler(os.Stdout, nil))
 	cfg, err := config.Load()
@@ -65,6 +67,7 @@ func main() {
 	}
 	go func() {
 		logger.Info("server started", "address", cfg.HTTPAddr, "environment", cfg.Environment)
+		logger.Debug("Scalar UI: " + ScalarUi)
 		if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 			logger.Error("server stopped unexpectedly", "error", err)
 			stop()
