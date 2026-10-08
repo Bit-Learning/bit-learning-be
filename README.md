@@ -1,5 +1,7 @@
 # Bit Learning API
 
+[![CI](https://github.com/lcaohoanq/bit-learning-be-v2/actions/workflows/ci.yml/badge.svg?branch=develop)](https://github.com/lcaohoanq/bit-learning-be-v2/actions/workflows/ci.yml)
+
 Backend Go modular monolith cho authentication và user profile, dùng `net/http`,
 chi, pgx, sqlc, goose, slog và OpenTelemetry. Luồng xử lý trong mỗi feature là
 `Handler → Service → Repository → sqlc`; `cmd/api` chỉ khởi tạo dependency và
