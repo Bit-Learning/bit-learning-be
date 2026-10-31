@@ -1,0 +1,24 @@
+root = "."
+tmp_dir = ".tmp"
+env_files = [".env"]
+
+[build]
+cmd = "go build -o ./.tmp/api ./cmd/api"
+entrypoint = ["./.tmp/api"]
+include_ext = ["go", "yaml", "yml"]
+exclude_dir = [".git", ".tmp", "bruno"]
+exclude_regex = ["_test.go"]
+delay = 300
+send_interrupt = true
+kill_delay = "500ms"
+
+[log]
+time = true
+
+[misc]
+clean_on_exit = true
+startup_banner = "Bit Learning API dev server"
+
+[screen]
+clear_on_rebuild = false
+keep_scroll = true

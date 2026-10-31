@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "Bit Learning API",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}
